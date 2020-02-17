@@ -13,6 +13,17 @@ import logging
 
 if __name__ == "__main__":
 
+    # Summary setup
+    model_summary = dict()
+    summary_data = dict()
+    summary_data['word_count'] = 0
+    summary_data['errors'] = 0
+    model_summary.setdefault('default', summary_data)
+    model_summary.setdefault('phone_call', summary_data)
+    model_summary.setdefault('phone_call_enhanced', summary_data)
+    model_summary.setdefault('video', summary_data)
+    model_summary.setdefault('command_and_search', summary_data)
+
     #logging setup
     logging.basicConfig(filename='wer_app.log', level=logging.DEBUG)
     logger = logging.getLogger(__name__)
@@ -74,7 +85,6 @@ if __name__ == "__main__":
     boosts.append(0)
     alternative_language_codes = args.alternative_languages
     encoding = args.encoding
-
 
     phrases = list()
 
@@ -225,6 +235,11 @@ if __name__ == "__main__":
 
                             io_handler.write_html_diagnostic(wer_obj, unique_root, io_handler.get_result_path())
 
+                            # Add data to summary tracker
+                            summary_data['word_count'] += ref_word_count
+                            summary_data['errors'] += ref_error_count
+                            model_summary[model] = summary_data
+
                             # Get NLP results
                             nlp_result = nlp_options.apply_nlp_options(nlp_model, hyp)
 
@@ -249,6 +264,10 @@ if __name__ == "__main__":
                             # Update csv
                             io_handler.update_csv(cloud_store_uri, configuration, nlp_model,
                                                   ref_word_count, ref_error_count, wer)
+
+                        ####  NEED CONVERT DICTIONARY TO DATA ARRAY PANDAS/NUMPY - CHECK MY RMOTR WORK ###
+
+
 
     print('Done')
 
