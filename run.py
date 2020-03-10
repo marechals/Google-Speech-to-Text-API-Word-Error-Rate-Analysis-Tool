@@ -418,3 +418,4 @@ if __name__ == "__main__":
     os.remove(queue_file_name)
 
 
+# -cs "gs://brb/150418057" -lr 150418057_results -l it-IT -m default -n LINEAR16 -hz 8000 -p 150418057_phrases.txt -b 20 50 100
