@@ -71,7 +71,7 @@ def TxtPreprocess(txt):
 
   # Remove extra space.
   txt = re.sub(' +', ' ', txt.strip())
-
+  txt = txt.replace('-', '')
   return txt
 
 
