@@ -361,8 +361,7 @@ if __name__ == "__main__":
                                 print(string)
                                 logger.info(string)
 
-                                #Remove hyp/ref from WER
-                                wer_obj.AddHypRef('', '')
+
 
                                 # Get words producing errors
                                 inserted_words, deleted_words, substituted_words = wer_obj.GetMissedWords()
@@ -381,6 +380,9 @@ if __name__ == "__main__":
 
                                 #NLP options
                                 if nlp_model.get_apply_stemming() or nlp_model.get_remove_stop_words() or nlp_model.get_n2w() or nlp_model.get_expand_contractions():
+                                    # Remove hyp/ref from WER
+                                    wer_obj.AddHypRef('', '')
+
                                     string = f'STEMMING: {nlp_model.get_apply_stemming()} \n' \
                                              f'REMOVE STOP WORDS: {nlp_model.get_remove_stop_words()} \n' \
                                             f'NUMBERS TO WORKDS: {nlp_model.get_n2w()} \n' \
