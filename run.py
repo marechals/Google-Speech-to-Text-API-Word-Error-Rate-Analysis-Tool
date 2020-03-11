@@ -281,40 +281,32 @@ if __name__ == "__main__":
                     print(string)
                     logger.info(string)
                     continue
-            for boost in boosts:
-                # audit boost
-                if boost > 0  and language not in 'en-US':
-                    string = f'Boost: {boost} not supported for language: {language_code}. Skipping'
-                    print(string)
-                    logger.info(string)
-                    boost = 0
-                    continue
 
-                if enhance and model == 'phone_call' or enhance and model == 'video':
-                    enhanced_runs = [True, False]
+            if enhance and model == 'phone_call' or enhance and model == 'video':
+                enhanced_runs = [True, False]
+            else:
+                enhanced_runs = [False]
+
+            for use_enhanced in enhanced_runs:
+                configuration.set_use_enhanced(use_enhanced)
+                if alternative_language_codes:
+                    alternative_runs = [True, False]
                 else:
-                    enhanced_runs = [False]
+                    alternative_runs = [False]
+                for alt_run in  alternative_runs:
 
-                for use_enhanced in enhanced_runs:
-                    configuration.set_use_enhanced(use_enhanced)
-                    if alternative_language_codes:
-                        alternative_runs = [True, False]
-                    else:
-                        alternative_runs = [False]
-                    for alt_run in  alternative_runs:
+                    for audio in audio_list:
+                        root = utilities.get_root_filename(audio)
 
-                        for audio in audio_list:
-                            root = utilities.get_root_filename(audio)
+                        #read reference
+                        msg = f'READING: Reference file {cloud_store_uri}/{root}.txt'
+                        print(msg)
+                        logger.info(msg)
 
-                            #read reference
-                            msg = f'READING: Reference file {cloud_store_uri}/{root}.txt'
-                            print(msg)
-                            logger.info(msg)
+                        ref = gcs.read_ref(cloud_store_uri, root + '.txt')
 
-                            ref = gcs.read_ref(cloud_store_uri, root + '.txt')
-
-                            for speech_run in speech_context_runs:
-
+                        for speech_run in speech_context_runs:
+                            for boost in boosts:
                                 # for speech context inclusion / disclusion
                                 if boost > 0 and speech_run:
                                     string = f'Running with phrase hints: {speech_run}, boost {boost}'
@@ -419,7 +411,7 @@ if __name__ == "__main__":
 
                                     # Update csv
                                     io_handler.update_csv(audio, configuration, nlp_model,
-                                                      ref_word_count, ref_error_count, wer)
+                                                  ref_word_count, ref_error_count, wer)
 
     print('Done')
     print('Deleting queue')
