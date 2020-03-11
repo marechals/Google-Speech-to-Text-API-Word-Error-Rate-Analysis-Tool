@@ -263,3 +263,11 @@ def test_get_count_of_word_instances():
     expected =  {'hello': 3, 'hi': 1, 'there': 1}
     assert result == expected
 
+def test_extract_nums():
+    from utilities.utilities import Utilities
+    u = Utilities()
+    raw = 'hello 12-34 this is 567'
+    expected = '1234 567 '
+    result = u.extract_nums(raw)
+    assert result == expected
+

@@ -202,4 +202,11 @@ class Utilities():
         return result
 
 
-
+    def extract_nums(self, txt):
+        txt = txt.replace('-', '')
+        words = txt.split()
+        result = ''
+        for word in words:
+            if word.isnumeric():
+                result += word + ' '
+        return result
